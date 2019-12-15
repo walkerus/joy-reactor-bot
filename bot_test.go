@@ -9,14 +9,14 @@ import (
 )
 
 func TestGetPostId(t *testing.T)  {
-	expectedId := `12345`
-	reader := strings.NewReader(fmt.Sprintf("<a title=\"ссылка на пост\" class=\"link\" href=\"/post/%s\">ссылка</a>", expectedId))
-	id, _ := pkgs.GetPostId(reader)
+	expectedID := `12345`
+	reader := strings.NewReader(fmt.Sprintf("<a title=\"ссылка на пост\" class=\"link\" href=\"/post/%s\">ссылка</a>", expectedID))
+	id, _ := pkgs.GetPostID(reader)
 
-	assert.Equal(t, expectedId, id)
+	assert.Equal(t, expectedID, id)
 
 	reader = strings.NewReader(fmt.Sprintf(`<a title="ссылка на пост" class="link" href="/post/">ссылка</a>`))
-	id, err := pkgs.GetPostId(reader)
+	id, err := pkgs.GetPostID(reader)
 
 	assert.Equal(t, ``, id)
 	assert.Equal(t, `post not found`, err.Error())

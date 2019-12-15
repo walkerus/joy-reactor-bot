@@ -35,7 +35,7 @@ func (store *Store) GetChats() ([]int64, error)  {
 	return result[`chats`], nil
 }
 
-func (store *Store) AddChat(chatId int64) error  {
+func (store *Store) AddChat(chatID int64) error  {
 	chats, getChatsError := store.GetChats()
 
 	if getChatsError != nil {
@@ -43,7 +43,7 @@ func (store *Store) AddChat(chatId int64) error  {
 	}
 
 	for _, v := range chats {
-		if v == chatId {
+		if v == chatID {
 			return nil
 		}
 	}
@@ -58,7 +58,7 @@ func (store *Store) AddChat(chatId int64) error  {
 
 	defer jsonFile.Close()
 
-	result[`chats`] = append(result[`chats`], chatId)
+	result[`chats`] = append(result[`chats`], chatID)
 	newFileContent, marshallingError := json.Marshal(result)
 
 	if marshallingError != nil {

@@ -17,17 +17,15 @@ func main() {
 	defer logFile.Close()
 
 	log.SetOutput(logFile)
-	tgBotApi, err := tgbotapi.NewBotAPI(os.Getenv(`BOT_TOKEN`))
+	tgBotAPI, err := tgbotapi.NewBotAPI(os.Getenv(`BOT_TOKEN`))
 
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	log.Println("Authorized on account %s", tgBotApi.Self.UserName)
-
 	s := pkgs.Store{FileName: os.Getenv(`BOT_STORE_FILE`)}
-	joyReactorBot := pkgs.JoyReactorBot{TelegramBotApi: tgBotApi, Store: s}
+	joyReactorBot := pkgs.JoyReactorBot{TelegramBotAPI: tgBotAPI, Store: s}
 
 	go joyReactorBot.StartUpdatingChatStore()
 	joyReactorBot.StartMailing()

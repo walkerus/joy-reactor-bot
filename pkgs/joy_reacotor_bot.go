@@ -11,15 +11,15 @@ import (
 )
 
 type JoyReactorBot struct {
-	TelegramBotApi *tgbotapi.BotAPI
-	Store Store
+	TelegramBotAPI *tgbotapi.BotAPI
+	Store          Store
 }
 
-func (bot *JoyReactorBot) StartUpdatingChatStore()  {
+func (bot *JoyReactorBot) StartUpdatingChatStore() {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
-	updates, err := bot.TelegramBotApi.GetUpdatesChan(u)
+	updates, err := bot.TelegramBotAPI.GetUpdatesChan(u)
 
 	if err != nil {
 		log.Println(err)
@@ -38,7 +38,7 @@ func (bot *JoyReactorBot) StartUpdatingChatStore()  {
 }
 
 func (bot *JoyReactorBot) StartMailing() {
-	lastPostId := ``
+	lastPostID := ``
 
 	for {
 		time.Sleep(30 * time.Second)
@@ -50,11 +50,11 @@ func (bot *JoyReactorBot) StartMailing() {
 			continue
 		}
 
-		id, _ := GetPostId(resp.Body)
+		id, _ := GetPostID(resp.Body)
 		resp.Body.Close()
 
-		if lastPostId != id {
-			lastPostId = id
+		if lastPostID != id {
+			lastPostID = id
 
 			chats, _ := bot.Store.GetChats()
 			message := `http://joyreactor.cc/post/` + id
@@ -62,7 +62,7 @@ func (bot *JoyReactorBot) StartMailing() {
 			for _, value := range chats {
 				msg := tgbotapi.NewMessage(value, message)
 
-				if _, sendError := bot.TelegramBotApi.Send(msg); sendError != nil {
+				if _, sendError := bot.TelegramBotAPI.Send(msg); sendError != nil {
 					log.Println(sendError)
 				}
 			}
@@ -70,19 +70,19 @@ func (bot *JoyReactorBot) StartMailing() {
 	}
 }
 
-func GetPostId(content io.Reader) (string, error)  {
+func GetPostID(content io.Reader) (string, error) {
 	hrefRe := regexp.MustCompile(`href="/post/\d{1,}"`)
-	postIdRe := regexp.MustCompile(`\d{1,}`)
+	postIDRe := regexp.MustCompile(`\d{1,}`)
 
 	for true {
 		bs := make([]byte, 1014)
 		n, err := content.Read(bs)
 
 		substring := hrefRe.Find(bs[:n])
-		postId := postIdRe.Find(substring)
+		postID := postIDRe.Find(substring)
 
-		if len(postId) != 0 {
-			return string(postId), nil
+		if len(postID) != 0 {
+			return string(postID), nil
 		}
 
 		if n == 0 || err != nil {
